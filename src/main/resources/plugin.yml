@@ -1,0 +1,33 @@
+name: EcoNETEnderChests
+version: '1.0'
+main: net.github.monkeee.ecoNETEnderChests.EcoNETEnderChests
+api-version: '1.21'
+authors: [_Monkeee]
+prefix: ENEC
+commands:
+  enderchest:
+    description: A command, to open your personal ender chest
+    aliases:
+      - ec
+permissions:
+  econet.enderchest.ec:
+    description: A permission for /ec command
+    default: true
+  econet.enderchest.rows.1:
+    description: PERM for allowing a player to have 1 row of items in ec
+    default: false
+  econet.enderchest.rows.2:
+    description: PERM for allowing a player to have 2 row of items in ec
+    default: false
+  econet.enderchest.rows.3:
+    description: PERM for allowing a player to have 3 row of items in ec
+    default: false
+  econet.enderchest.rows.4:
+    description: PERM for allowing a player to have 4 row of items in ec
+    default: false
+  econet.enderchest.rows.5:
+    description: PERM for allowing a player to have 5 row of items in ec
+    default: false
+  econet.enderchest.rows.6:
+    description: PERM for allowing a player to have 6 row of items in ec
+    default: false
