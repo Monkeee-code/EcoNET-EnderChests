@@ -9,6 +9,10 @@ commands:
     description: A command, to open your personal ender chest
     aliases:
       - ec
+  enderchestsee:
+    description: A command, to open other player's ender chest
+    aliases:
+      - ecsee
 permissions:
   econet.enderchest.ec:
     description: A permission for /ec command
@@ -31,3 +35,6 @@ permissions:
   econet.enderchest.rows.6:
     description: PERM for allowing a player to have 6 row of items in ec
     default: false
+  econet.enderchest.see:
+    description: A permission for allowing admins to see in to player's inventory
+    default : op

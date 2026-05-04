@@ -27,21 +27,32 @@ public class EnderChestCommand implements CommandExecutor {
         }
         Database db = EcoNETEnderChests.getDatabase();
 
-        Rows rows;
-        if (player.hasPermission("econet.enderchest.rows.6")) rows = Rows.SIX;
-        else if (player.hasPermission("econet.enderchest.rows.5")) rows = Rows.FIVE;
-        else if (player.hasPermission("econet.enderchest.rows.4")) rows = Rows.FOUR;
-        else if (player.hasPermission("econet.enderchest.rows.3")) rows = Rows.THREE;
-        else if (player.hasPermission("econet.enderchest.rows.2")) rows = Rows.TWO;
-        else if (player.hasPermission("econet.enderchest.rows.1")) rows = Rows.ONE;
-        else rows = Rows.THREE;
-
-        Inventory inv = db.loadInventory(player);
-        if (inv == null) {
-            inv = Bukkit.createInventory(new EnderChestHolder(player), rows.getInt()*9, player.getName()+"'s Ender Chest");
-        }
-        player.openInventory(inv);
-
         return true;
+    }
+
+    public static void openChestsFor(Player viewer, Player owner) {
+        EcoNETEnderChests plugin = EcoNETEnderChests.getInstance();
+        Database db = EcoNETEnderChests.getDatabase();
+
+        Inventory inv = plugin.getOpenChests(owner.getUniqueId());
+        if (inv == null) {
+            inv = db.loadInventory(owner);
+            if (inv == null) {
+                inv = Bukkit.createInventory(new EnderChestHolder(owner), getRows(owner)*9, Component.text(owner.getName()+"'s Ender Chest"));
+            }
+            plugin.setOpenChests(owner.getUniqueId(), inv);
+        }
+        viewer.openInventory(inv);
+    }
+
+    @NotNull
+    public static Integer getRows(Player player) {
+        if (player.hasPermission("econet.enderchest.rows.6")) return 6;
+        else if (player.hasPermission("econet.enderchest.rows.5")) return 5;
+        else if (player.hasPermission("econet.enderchest.rows.4")) return 4;
+        else if (player.hasPermission("econet.enderchest.rows.3")) return 3;
+        else if (player.hasPermission("econet.enderchest.rows.2")) return 2;
+        else if (player.hasPermission("econet.enderchest.rows.1")) return 1;
+        else return 3;
     }
 }

@@ -2,6 +2,8 @@ package net.github.monkeee.ecoNETEnderChests;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
+import net.github.monkeee.ecoNETEnderChests.commands.EnderChestCommand;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -24,6 +26,7 @@ public class Database {
     public Connection getPlayerConnection(UUID player) {
         try {
             File folder = new File(plugin.getDataFolder(), "InventoryData");
+            //noinspection ResultOfMethodCallIgnored
             folder.mkdirs();
 
             File dbFile = new File(folder, player.toString()+".db");
@@ -44,11 +47,9 @@ public class Database {
                 CREATE TABLE IF NOT EXISTS inventory (
                     slot INTEGER PRIMARY KEY,
                     nbt TEXT,
-                    rows INTEGER
                 )""");
 
-            String sql = "INSERT OR REPLACE INTO inventory (slot, nbt, rows) VALUES (?, ?, ?)";
-            int rows = inv.getSize() / 9;
+            String sql = "INSERT OR REPLACE INTO inventory (slot, nbt) VALUES (?, ?)";
 
             for (int slot = 0; slot < inv.getSize(); slot++) {
                 ItemStack item = inv.getItem(slot);
@@ -59,7 +60,6 @@ public class Database {
                 try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.setInt(1, slot);
                     stmt.setString(2, nbtItem.toString());
-                    stmt.setInt(3, rows);
                     stmt.executeUpdate();
                 }
             }
@@ -74,16 +74,17 @@ public class Database {
             if (conn == null) return null;
 
             ResultSet rs = conn.createStatement().executeQuery("""
-                SELECT slot, nbt, rows FROM inventory;""");
+                SELECT slot, nbt FROM inventory;""");
 
-            Inventory inv = null;
+            int rows = EnderChestCommand.getRows(player);
+            Inventory inv = Bukkit.createInventory(new EnderChestHolder(player), rows*9, Component.text(player.getName()+"'s Ender Chest"));
 
             while (rs.next()) {
-                if (inv == null) {
-                    inv = Bukkit.createInventory(new EnderChestHolder(player), rs.getInt("rows")*9, player.getName()+"'s Ender Chest");
-                }
+                int slot = rs.getInt("slot");
+                if (slot >= rows*9) continue;
+
                 ReadWriteNBT container = NBT.parseNBT(rs.getString("nbt"));
-                inv.setItem(rs.getInt("slot"), NBT.itemStackFromNBT(container));
+                inv.setItem(slot, NBT.itemStackFromNBT(container));
             }
             return inv;
         } catch (SQLException e) {
