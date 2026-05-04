@@ -3,7 +3,6 @@ package net.github.monkeee.ecoNETEnderChests.commands;
 import net.github.monkeee.ecoNETEnderChests.Database;
 import net.github.monkeee.ecoNETEnderChests.EcoNETEnderChests;
 import net.github.monkeee.ecoNETEnderChests.EnderChestHolder;
-import net.github.monkeee.ecoNETEnderChests.Rows;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
